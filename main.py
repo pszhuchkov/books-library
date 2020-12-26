@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Dec 25 13:15:32 2020
-
-@author: Pavel
-"""
 import requests
 import urllib3
 
