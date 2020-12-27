@@ -17,7 +17,7 @@ IMAGES_FOLDER = 'images'
 def download_txt(response, filename, books_folder=BOOKS_FOLDER):
     Path(books_folder).mkdir(exist_ok=True)
     filepath = os.path.join(
-        books_folder, f"{filename}.txt"
+        books_folder, f"{sanitize_filename(filename)}.txt"
     )
     with open(filepath, 'w') as file:
         file.write(response.text)
@@ -47,7 +47,7 @@ def download_books(url, start, end):
             filename, image_url = get_bookinfo(book_id)
             print(filename, image_url)
             # download_txt(response, filename)
-            download_image(image_url)
+            # download_image(image_url)
 
 
 def get_bookinfo(book_id, url=BOOK_URL):
@@ -56,10 +56,12 @@ def get_bookinfo(book_id, url=BOOK_URL):
     response.raise_for_status()
     soup = BeautifulSoup(response.text, 'lxml')
     book_name = soup.find('h1').text.split('::')[0].strip()
-    filename = f"{book_id}. {sanitize_filename(book_name)}"
+    filename = f"{book_id}. {book_name}"
     image_url = soup.find(class_='bookimage').find('img')['src']
     image_url_full = urljoin(url, image_url)
-    return filename, image_url_full
+    comments = soup.find_all(class_='texts')
+    comments_clean = [comment.find('span').text for comment in comments]
+    return filename, image_url_full, comments_clean
 
 
 def check_for_redirect(response):
