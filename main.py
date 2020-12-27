@@ -44,30 +44,10 @@ def download_books(url, start, end):
         except HTTPError:
             pass
         else:
-            pass
-            # filename, image_url = get_bookinfo(book_id)
-            # download_txt(response, filename)
-            # download_image(image_url)
-
-
-def get_bookinfo(book_id, url=BOOK_URL):
-    book_url = url.format(book_id)
-    response = requests.get(book_url, verify=False)
-    response.raise_for_status()
-    soup = BeautifulSoup(response.text, 'lxml')
-    book_name = soup.find('h1').text.split('::')[0].strip()
-    filename = f"{book_id}. {book_name}"
-
-    image_url = soup.find(class_='bookimage').find('img')['src']
-    image_url_full = urljoin(url, image_url)
-
-    comments = soup.find_all(class_='texts')
-    comments_clean = [comment.find('span').text for comment in comments]
-
-    genres = soup.find('span', class_='d_book')
-    genres_a = genres.find_all('a')
-    genres_lst = [genre.text for genre in genres_a]
-    print(genres_lst)
+            book_properties = get_book_properties(book_id)
+            filename = f"{book_id}. {book_properties['name']}"
+            download_txt(response, filename)
+            download_image(book_properties['image_url'])
 
 
 def check_for_redirect(response):
