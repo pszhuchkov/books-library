@@ -75,6 +75,43 @@ def check_for_redirect(response):
         raise HTTPError
 
 
+def get_book_properties(book_id, url=BOOK_URL):
+    book_url = url.format(book_id)
+    response = requests.get(book_url, verify=False)
+    response.raise_for_status()
+    book_page = response.text
+    return parse_book_page(book_page, url)
+
+
+def parse_book_page(html, url):
+    soup = BeautifulSoup(html, 'lxml')
+    book_name = soup.find('h1').text.split('::')[0].strip()
+    author = soup.find('h1').text.split('::')[1].strip()
+    image_url_relative = soup.find(class_='bookimage').find('img')['src']
+    image_url_absolute = urljoin(url, image_url_relative)
+    comments_raw = soup.find_all(class_='texts')
+    comments = [comment.find('span').text for comment in comments_raw]
+    genres_raw = soup.find('span', class_='d_book').find_all('a')
+    genres = [genre.text for genre in genres_raw]
+    return {
+        'name': book_name,
+        'author': author,
+        'image_url': image_url_absolute,
+        'comments': comments,
+        'genres': genres
+    }
+
+
+def get_parsed_arguments():
+    parser = argparse.ArgumentParser(
+        description='Программа скачивает книги с сайта tululu.org. В качестве '
+                    'аргументов принимается начальный и конечный id книг.'
+    )
+    parser.add_argument('start_id', type=int)
+    parser.add_argument('end_id', type=int)
+    return parser.parse_args()
+
+
 if __name__ == '__main__':
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     download_books(DOWNLOAD_TXT_URL, 1, 10)
