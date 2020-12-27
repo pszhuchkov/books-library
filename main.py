@@ -19,7 +19,7 @@ def download_txt(response, filename, books_folder=BOOKS_FOLDER):
     filepath = os.path.join(
         books_folder, f"{sanitize_filename(filename)}.txt"
     )
-    with open(filepath, 'w') as file:
+    with open(filepath, 'w', encoding='utf8') as file:
         file.write(response.text)
     return filepath
 
