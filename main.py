@@ -1,6 +1,7 @@
 import requests
 import urllib3
 import os
+import argparse
 from pathlib import Path
 from requests.exceptions import HTTPError
 from pathvalidate import sanitize_filename
@@ -94,4 +95,7 @@ def get_parsed_arguments():
 
 if __name__ == '__main__':
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-    download_books(DOWNLOAD_TXT_URL, 1, 10)
+    args = get_parsed_arguments()
+    download_books(
+        DOWNLOAD_TXT_URL, args.start_id, args.end_id
+    )
