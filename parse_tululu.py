@@ -7,6 +7,7 @@ from requests.exceptions import HTTPError
 from pathvalidate import sanitize_filename
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+from tqdm import tqdm
 
 
 BOOKS_FOLDER = 'books'
@@ -36,7 +37,7 @@ def download_image(url, images_folder=IMAGES_FOLDER):
 
 
 def download_books(url, start, end):
-    for book_id in range(start, end + 1):
+    for book_id in tqdm(range(start, end + 1)):
         book_txt_url = url.format(book_id)
         try:
             response = requests.get(book_txt_url, verify=False)
