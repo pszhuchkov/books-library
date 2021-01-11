@@ -78,16 +78,16 @@ def parse_book_page(html, url):
     soup = BeautifulSoup(html, 'lxml')
     book_name = soup.find('h1').text.split('::')[0].strip()
     author = soup.find('h1').text.split('::')[1].strip()
-    image_url_relative = soup.find(class_='bookimage').find('img')['src']
-    image_url_absolute = urljoin(url, image_url_relative)
-    comments_raw = soup.find_all(class_='texts')
-    comments = [comment.find('span').text for comment in comments_raw]
-    genres_raw = soup.find('span', class_='d_book').find_all('a')
-    genres = [genre.text for genre in genres_raw]
+    relative_image_url = soup.find(class_='bookimage').find('img')['src']
+    absolute_image_url = urljoin(url, relative_image_url)
+    raw_comments = soup.find_all(class_='texts')
+    comments = [comment.find('span').text for comment in raw_comments]
+    raw_genres = soup.find('span', class_='d_book').find_all('a')
+    genres = [genre.text for genre in raw_genres]
     return {
         'name': book_name,
         'author': author,
-        'image_url': image_url_absolute,
+        'image_url': absolute_image_url,
         'comments': comments,
         'genres': genres
     }
