@@ -54,6 +54,7 @@ def get_book_properties(book_id, url=BOOK_URL):
     book_url = url.format(book_id)
     response = requests.get(book_url, verify=False)
     response.raise_for_status()
+    check_for_redirect(response)
     book_page = response.text
     return parse_book_page(book_page, url)
 
