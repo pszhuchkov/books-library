@@ -6,7 +6,7 @@ from pathlib import Path
 from requests.exceptions import HTTPError
 from pathvalidate import sanitize_filename
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit, unquote
 from tqdm import tqdm
 from datetime import datetime
 
@@ -29,7 +29,9 @@ def download_txt(response, filename, books_folder=BOOKS_FOLDER):
 def download_image(url, images_folder=IMAGES_FOLDER):
     response = requests.get(url, verify=False)
     response.raise_for_status()
-    filename, extension = os.path.splitext(url.split('/')[-1])
+    unquoted_url = unquote(url)
+    unquoted_url_path = urlsplit(unquoted_url).path
+    filename, extension = os.path.splitext(unquoted_url_path.split('/')[-1])
     filepath = os.path.join(
         images_folder, f'{filename}_{get_timestamp_now()}{extension}'
     )
