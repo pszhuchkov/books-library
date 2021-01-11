@@ -11,9 +11,9 @@ from tqdm import tqdm
 from datetime import datetime
 
 
-BOOKS_FOLDER = 'books'
-BOOK_URL = 'https://tululu.org/b{}'
+BOOK_URL = 'https://tululu.org/b{}/'
 DOWNLOAD_TXT_URL = 'https://tululu.org/txt.php?id={}'
+BOOKS_FOLDER = 'books'
 IMAGES_FOLDER = 'images'
 
 
