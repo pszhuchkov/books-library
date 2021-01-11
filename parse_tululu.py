@@ -45,22 +45,6 @@ def get_timestamp_now():
     return timestamp_now
 
 
-def download_books(url, start, end):
-    for book_id in tqdm(range(start, end + 1)):
-        book_txt_url = url.format(book_id)
-        try:
-            response = requests.get(book_txt_url, verify=False)
-            response.raise_for_status()
-            check_for_redirect(response)
-        except HTTPError:
-            pass
-        else:
-            book_properties = get_book_properties(book_id)
-            filename = f"{book_id}. {book_properties['name']}"
-            save_txt_file(response, filename)
-            download_image(book_properties['image_url'])
-
-
 def check_for_redirect(response):
     if response.history:
         raise HTTPError
