@@ -2,8 +2,10 @@ import requests
 import urllib3
 import os
 import argparse
+import time
+import sys
 from pathlib import Path
-from requests.exceptions import HTTPError
+from requests.exceptions import HTTPError, ConnectionError
 from pathvalidate import sanitize_filename
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlsplit, unquote
