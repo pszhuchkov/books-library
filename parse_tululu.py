@@ -17,7 +17,6 @@ IMAGES_FOLDER = 'images'
 
 
 def download_txt(response, filename, books_folder=BOOKS_FOLDER):
-    Path(books_folder).mkdir(exist_ok=True)
     filepath = os.path.join(
         books_folder, f"{sanitize_filename(filename)}.txt"
     )
@@ -27,7 +26,6 @@ def download_txt(response, filename, books_folder=BOOKS_FOLDER):
 
 
 def download_image(url, images_folder=IMAGES_FOLDER):
-    Path(images_folder).mkdir(exist_ok=True)
     response = requests.get(url, verify=False)
     response.raise_for_status()
     filename = url.split('/')[-1]
@@ -96,6 +94,8 @@ def get_parsed_arguments():
 
 if __name__ == '__main__':
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    Path(BOOKS_FOLDER).mkdir(exist_ok=True)
+    Path(IMAGES_FOLDER).mkdir(exist_ok=True)
     args = get_parsed_arguments()
     download_books(
         DOWNLOAD_TXT_URL, args.start_id, args.end_id
