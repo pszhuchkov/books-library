@@ -103,11 +103,31 @@ def get_parsed_arguments():
     return parser.parse_args()
 
 
-if __name__ == '__main__':
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+def download_book(book_id, url=DOWNLOAD_TXT_URL):
+    book_txt_url = url.format(book_id)
+    response = requests.get(book_txt_url, verify=False)
+    response.raise_for_status()
+    check_for_redirect(response)
+    book_properties = get_book_properties(book_id)
+    filename = f"{book_id}. {book_properties['name']}"
+    save_txt_file(response, filename)
+    download_image(book_properties['image_url'])
+
+
+def main():
     Path(BOOKS_FOLDER).mkdir(exist_ok=True)
     Path(IMAGES_FOLDER).mkdir(exist_ok=True)
     args = get_parsed_arguments()
-    download_books(
-        DOWNLOAD_TXT_URL, args.start_id, args.end_id
-    )
+    for book_id in tqdm(range(args.start_id, args.end_id + 1)):
+        try:
+            download_book(book_id)
+        except ConnectionError as conn_err:
+            print(conn_err, file=sys.stderr)
+            time.sleep(5)
+        except HTTPError as http_err:
+            print(http_err, file=sys.stderr)
+
+
+if __name__ == '__main__':
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    main()
