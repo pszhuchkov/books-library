@@ -17,7 +17,7 @@ DOWNLOAD_TXT_URL = 'https://tululu.org/txt.php?id={}'
 IMAGES_FOLDER = 'images'
 
 
-def download_txt(response, filename, books_folder=BOOKS_FOLDER):
+def save_txt_file(response, filename, books_folder=BOOKS_FOLDER):
     filepath = os.path.join(
         books_folder, f"{sanitize_filename(filename)}.txt"
     )
@@ -57,7 +57,7 @@ def download_books(url, start, end):
         else:
             book_properties = get_book_properties(book_id)
             filename = f"{book_id}. {book_properties['name']}"
-            download_txt(response, filename)
+            save_txt_file(response, filename)
             download_image(book_properties['image_url'])
 
 
