@@ -22,7 +22,7 @@ BOOKS_FOLDER = 'books'
 IMAGES_FOLDER = 'images'
 
 
-def save_txt_file(response, filename, books_folder=BOOKS_FOLDER):
+def save_txt_file(response, filename, books_folder):
     filepath = os.path.join(
         books_folder, f"{sanitize_filename(filename)}.txt"
     )
@@ -31,7 +31,7 @@ def save_txt_file(response, filename, books_folder=BOOKS_FOLDER):
     return filepath
 
 
-def download_image(url, images_folder=IMAGES_FOLDER):
+def download_image(url, images_folder):
     response = requests.get(url, verify=False)
     response.raise_for_status()
     unquoted_url = unquote(url)
@@ -90,14 +90,21 @@ def parse_book_page(html):
 def get_parsed_arguments():
     parser = argparse.ArgumentParser(
         description='Программа скачивает книги с сайта tululu.org. В качестве '
-                    'аргументов принимается начальный и конечный id книг.'
+                    'аргументов принимаются начальный и конечный id книг, а '
+                    'также пути до директорий с книгами и изображениями. По'
+                    'умолчанию (без указания параметров) скачиваются книги с'
+                    'id с 1 до 10 включительно.'
     )
-    parser.add_argument('start_id', type=int)
-    parser.add_argument('end_id', type=int)
+    parser.add_argument('--start_id', type=int, default=1)
+    parser.add_argument('--end_id', type=int, default=10)
+    parser.add_argument('--books_folder', type=str, default=BOOKS_FOLDER)
+    parser.add_argument('--images_folder', type=str, default=IMAGES_FOLDER)
     return parser.parse_args()
 
 
-def download_book(book_id, url=DOWNLOAD_TXT_URL):
+def download_book(
+        book_id, books_folder, images_folder, url=DOWNLOAD_TXT_URL
+):
     book_txt_url = url.format(book_id)
     response = requests.get(book_txt_url, verify=False)
     response.raise_for_status()
@@ -105,19 +112,22 @@ def download_book(book_id, url=DOWNLOAD_TXT_URL):
     book_properties = get_book_properties(book_id)
     filename = f"{book_id}. {book_properties['title']}"
     image_url = urljoin(url, book_properties['img_src'])
-    book_properties['book_path'] = save_txt_file(response, filename)
-    book_properties['img_src'] = download_image(image_url)
+    book_properties['book_path'] = \
+        save_txt_file(response, filename, books_folder)
+    book_properties['img_src'] = download_image(image_url, images_folder)
     return book_properties
 
 
 def main():
-    Path(BOOKS_FOLDER).mkdir(exist_ok=True)
-    Path(IMAGES_FOLDER).mkdir(exist_ok=True)
     args = get_parsed_arguments()
+    Path(args.books_folder).mkdir(exist_ok=True)
+    Path(args.images_folder).mkdir(exist_ok=True)
     downloaded_books = []
     for book_id in tqdm(range(args.start_id, args.end_id + 1)):
         try:
-            downloaded_book = download_book(book_id)
+            downloaded_book = download_book(
+                book_id, args.books_folder, args.images_folder
+            )
             downloaded_books.append(downloaded_book)
         except ConnectionError as conn_err:
             print(conn_err, file=sys.stderr)
