@@ -1,17 +1,19 @@
+import argparse
+import json
+import os
+import sys
+import time
+
 import requests
 import urllib3
-import os
-import argparse
-import time
-import sys
-import json
-from pathlib import Path
-from requests.exceptions import HTTPError, ConnectionError
-from pathvalidate import sanitize_filename
-from bs4 import BeautifulSoup
-from urllib.parse import urljoin, urlsplit, unquote
-from tqdm import tqdm
+
 from datetime import datetime
+from pathlib import Path
+from bs4 import BeautifulSoup
+from pathvalidate import sanitize_filename
+from requests.exceptions import HTTPError, ConnectionError
+from tqdm import tqdm
+from urllib.parse import urljoin, urlsplit, unquote
 
 
 BOOK_URL = 'https://tululu.org/b{}/'
