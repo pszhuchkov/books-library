@@ -34,8 +34,12 @@ def download_image(url, images_folder=IMAGES_FOLDER):
     unquoted_url = unquote(url)
     unquoted_url_path = urlsplit(unquoted_url).path
     filename, extension = os.path.splitext(unquoted_url_path.split('/')[-1])
+    timestamp_now = get_timestamp_now()
+    new_filename = filename
+    if filename != 'nopic':
+        new_filename = f'{filename}_{timestamp_now}'
     filepath = os.path.join(
-        images_folder, f'{filename}_{get_timestamp_now()}{extension}'
+        images_folder, f'{new_filename}{extension}'
     )
     with open(filepath, 'wb') as file:
         file.write(response.content)
