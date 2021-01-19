@@ -78,7 +78,6 @@ def parse_book_page(html):
     comments = [comment.find('span').text for comment in raw_comments]
     raw_genres = soup.select("span.d_book a")
     genres = [genre.text for genre in raw_genres]
-    print(genres)
     return {
         'title': title,
         'author': author,
