@@ -4,6 +4,7 @@ import os
 import argparse
 import time
 import sys
+import json
 from pathlib import Path
 from requests.exceptions import HTTPError, ConnectionError
 from pathvalidate import sanitize_filename
@@ -43,6 +44,7 @@ def download_image(url, images_folder=IMAGES_FOLDER):
     )
     with open(filepath, 'wb') as file:
         file.write(response.content)
+    return filepath
 
 
 def get_timestamp_now():
@@ -62,23 +64,22 @@ def get_book_properties(book_id, url=BOOK_URL):
     response.raise_for_status()
     check_for_redirect(response)
     book_page = response.text
-    return parse_book_page(book_page, url)
+    return parse_book_page(book_page)
 
 
-def parse_book_page(html, url):
+def parse_book_page(html):
     soup = BeautifulSoup(html, 'lxml')
-    book_name, author, *_ = soup.find('h1').text.split('::')
-    book_name, author = book_name.strip(), author.strip()
-    relative_image_url = soup.find(class_='bookimage').find('img')['src']
-    absolute_image_url = urljoin(url, relative_image_url)
+    title, author, *_ = soup.find('h1').text.split('::')
+    title, author = title.strip(), author.strip()
+    img_src = soup.find(class_='bookimage').find('img')['src']
     raw_comments = soup.find_all(class_='texts')
     comments = [comment.find('span').text for comment in raw_comments]
     raw_genres = soup.find('span', class_='d_book').find_all('a')
     genres = [genre.text for genre in raw_genres]
     return {
-        'name': book_name,
+        'title': title,
         'author': author,
-        'image_url': absolute_image_url,
+        'img_src': img_src,
         'comments': comments,
         'genres': genres
     }
@@ -100,23 +101,29 @@ def download_book(book_id, url=DOWNLOAD_TXT_URL):
     response.raise_for_status()
     check_for_redirect(response)
     book_properties = get_book_properties(book_id)
-    filename = f"{book_id}. {book_properties['name']}"
-    save_txt_file(response, filename)
-    download_image(book_properties['image_url'])
+    filename = f"{book_id}. {book_properties['title']}"
+    image_url = urljoin(url, book_properties['img_src'])
+    book_properties['book_path'] = save_txt_file(response, filename)
+    book_properties['img_src'] = download_image(image_url)
+    return book_properties
 
 
 def main():
     Path(BOOKS_FOLDER).mkdir(exist_ok=True)
     Path(IMAGES_FOLDER).mkdir(exist_ok=True)
     args = get_parsed_arguments()
+    downloaded_books = []
     for book_id in tqdm(range(args.start_id, args.end_id + 1)):
         try:
-            download_book(book_id)
+            downloaded_book = download_book(book_id)
+            downloaded_books.append(downloaded_book)
         except ConnectionError as conn_err:
             print(conn_err, file=sys.stderr)
             time.sleep(5)
         except HTTPError as http_err:
             print(http_err, file=sys.stderr)
+    with open('downloaded_books.json', 'w', encoding='utf_8') as file:
+        json.dump(downloaded_books, file, ensure_ascii=False, indent=4)
 
 
 if __name__ == '__main__':
