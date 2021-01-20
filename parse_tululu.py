@@ -90,13 +90,11 @@ def parse_book_page(html):
 def get_parsed_arguments():
     parser = argparse.ArgumentParser(
         description='Программа скачивает книги с сайта tululu.org. В качестве '
-                    'аргументов принимаются начальный и конечный id книг, а '
-                    'также пути до директорий с книгами и изображениями. По'
-                    'умолчанию (без указания параметров) скачиваются книги с'
-                    'id с 1 до 10 включительно.'
+                    'аргументов принимаются начальный и конечный id книг , а '
+                    'также пути до директорий с книгами и изображениями.'
     )
-    parser.add_argument('--start_id', type=int, default=1)
-    parser.add_argument('--end_id', type=int, default=10)
+    parser.add_argument('start_id', type=int)
+    parser.add_argument('end_id', type=int)
     parser.add_argument('--books_folder', type=str, default=BOOKS_FOLDER)
     parser.add_argument('--images_folder', type=str, default=IMAGES_FOLDER)
     return parser.parse_args()
