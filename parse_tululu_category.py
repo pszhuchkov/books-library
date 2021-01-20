@@ -36,8 +36,11 @@ def get_amount_pages(url):
     response = requests.get(url, verify=False)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, 'lxml')
-    last_page_number = int(soup.select('.npage')[-1].string)
-    return last_page_number
+    page_numbers = soup.select('.npage')
+    if page_numbers:
+        last_page_number = int(page_numbers[-1].string)
+        return last_page_number
+    return 1
 
 
 def download_books_on_page(url, books_folder, images_folder):
