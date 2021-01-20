@@ -20,15 +20,20 @@ COLLECTION_URL = 'https://tululu.org/l55/'
 def get_parsed_arguments():
     parser = argparse.ArgumentParser(
         description='Программа скачивает книги определенной коллекции '
-                    'с сайта tululu.org. '
+                    'с сайта tululu.org (по умолчанию - фантастика). '
                     'В качестве аргументов принимаются начальная и конечная '
-                    'страницы, а также пути до директорий с книгами и '
-                    'изображениями.'
+                    'страницы, пути до директорий с книгами и '
+                    'изображениями, ссылка на web-страницу коллекции.'
     )
-    parser.add_argument('--start_page', type=int, default=1)
-    parser.add_argument('--end_page', type=int)
-    parser.add_argument('--books_folder', type=str, default=BOOKS_FOLDER)
-    parser.add_argument('--images_folder', type=str, default=IMAGES_FOLDER)
+    parser.add_argument('-s', '--start_page', type=int, default=1)
+    parser.add_argument('-e', '--end_page', type=int)
+    parser.add_argument('-b', '--books_folder', type=str, default=BOOKS_FOLDER)
+    parser.add_argument(
+        '-i', '--images_folder', type=str, default=IMAGES_FOLDER
+    )
+    parser.add_argument(
+        '-c', '--collection_url', type=str, default=COLLECTION_URL
+    )
     return parser.parse_args()
 
 
@@ -73,9 +78,9 @@ def main():
     Path(args.images_folder).mkdir(exist_ok=True)
     downloaded_books = []
     start_page = args.start_page
-    end_page = args.end_page or get_amount_pages(COLLECTION_URL)
+    end_page = args.end_page or get_amount_pages(args.collection_url)
     for page_number in range(start_page, end_page + 1):
-        url = urljoin(COLLECTION_URL, str(page_number))
+        url = urljoin(args.collection_url, str(page_number))
         try:
             downloaded_books.extend(
                 download_books_on_page(
