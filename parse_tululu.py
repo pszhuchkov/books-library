@@ -73,7 +73,7 @@ def parse_book_page(html):
     title, author, *_ = soup.find('h1').text.split('::')
     title, author = title.strip(), author.strip()
     img_src = soup.select_one(".bookimage img")['src']
-    raw_comments = soup.find_all(class_='texts')
+    raw_comments = soup.select('.texts')
     comments = [comment.find('span').text for comment in raw_comments]
     raw_genres = soup.select("span.d_book a")
     genres = [genre.text for genre in raw_genres]
