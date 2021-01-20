@@ -11,7 +11,8 @@ from bs4 import BeautifulSoup
 from requests.exceptions import HTTPError, ConnectionError
 from urllib.parse import urljoin
 from parse_tululu import download_book, check_for_redirect
-from helpers import get_parsed_arguments, BOOK_URL
+from helpers import get_parsed_arguments
+from constants import BOOK_URL
 
 
 def get_amount_pages(url):

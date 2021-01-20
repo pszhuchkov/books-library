@@ -12,7 +12,8 @@ from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from requests.exceptions import HTTPError, ConnectionError
 from urllib.parse import urljoin, urlsplit, unquote
-from helpers import get_parsed_arguments, BOOK_URL, DOWNLOAD_TXT_URL
+from constants import BOOK_URL, DOWNLOAD_TXT_URL
+from helpers import get_parsed_arguments
 
 
 def save_txt_file(response, filename, books_dir):

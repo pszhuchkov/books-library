@@ -1,11 +1,6 @@
 import argparse
 
-
-BOOK_URL = 'https://tululu.org/b{}/'
-DOWNLOAD_TXT_URL = 'https://tululu.org/txt.php?id={}'
-BOOKS_DIRNAME = 'books'
-IMAGES_DIRNAME = 'images'
-COLLECTION_URL = 'https://tululu.org/l55/'
+from constants import BOOKS_DIRNAME, IMAGES_DIRNAME, COLLECTION_URL
 
 
 def get_parsed_arguments():
