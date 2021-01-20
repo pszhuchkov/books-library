@@ -125,8 +125,8 @@ def main():
             downloaded_book = download_book(
                 book_id, args.books_folder, args.images_folder
             )
-            print(BOOK_URL.format(book_id))
             downloaded_books.append(downloaded_book)
+            print(f'Сохранена книга: {BOOK_URL.format(book_id)}')
         except ConnectionError as conn_err:
             print(conn_err, file=sys.stderr)
             time.sleep(5)
