@@ -11,8 +11,8 @@ from bs4 import BeautifulSoup
 from requests.exceptions import HTTPError, ConnectionError
 from urllib.parse import urljoin
 from parse_tululu import download_book, check_for_redirect
-from helpers import get_parsed_arguments
 from constants import BOOK_URL
+from helpers import get_parsed_arguments
 
 
 def get_amount_pages(url):
@@ -26,8 +26,8 @@ def get_amount_pages(url):
     return 1
 
 
-def download_books_on_page(url, books_folder, images_folder,
-                           skip_txt, skip_img):
+def download_books_on_page(
+        url, books_folder, images_folder, skip_txt, skip_img):
     downloaded_books_on_page = []
     response = requests.get(url, verify=False)
     response.raise_for_status()
@@ -39,8 +39,7 @@ def download_books_on_page(url, books_folder, images_folder,
         book_id = book_url[2:-1]
         try:
             downloaded_book = download_book(
-                book_id, books_folder, images_folder, skip_txt, skip_img
-            )
+                book_id, books_folder, images_folder, skip_txt, skip_img)
             downloaded_books_on_page.append(downloaded_book)
             print(f'Сохранена книга: {BOOK_URL.format(book_id)}')
         except ConnectionError as conn_err:
@@ -64,10 +63,9 @@ def main():
         url = urljoin(args.collection_url, str(page_number))
         try:
             downloaded_books.extend(
-                download_books_on_page(
-                    url, target_books_dir, target_images_dir, args.skip_txt,
-                    args.skip_img
-                )
+                download_books_on_page(url, target_books_dir,
+                                       target_images_dir, args.skip_txt,
+                                       args.skip_img)
             )
             print(f'Обработка страницы {page_number} завершена')
         except ConnectionError as conn_err:
@@ -76,8 +74,8 @@ def main():
         except HTTPError as http_err:
             print(http_err, file=sys.stderr)
 
-    result_filepath = \
-        args.json_path or os.path.join(args.dest_dir, 'downloaded_books.json')
+    result_filepath = args.json_path or os.path.join(args.dest_dir,
+                                                     'downloaded_books.json')
     with open(result_filepath, 'w', encoding='utf_8') as file:
         json.dump(downloaded_books, file, ensure_ascii=False, indent=4)
 
