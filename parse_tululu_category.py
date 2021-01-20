@@ -10,7 +10,8 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 from requests.exceptions import HTTPError, ConnectionError
 from urllib.parse import urljoin
-from parse_tululu import download_book, BOOKS_FOLDER, IMAGES_FOLDER, BOOK_URL
+from parse_tululu import download_book, BOOKS_FOLDER, IMAGES_FOLDER, BOOK_URL,\
+    check_for_redirect
 
 
 COLLECTION_URL = 'https://tululu.org/l55/'
@@ -43,6 +44,7 @@ def download_books_on_page(url, books_folder, images_folder):
     downloaded_books_on_page = []
     response = requests.get(url, verify=False)
     response.raise_for_status()
+    check_for_redirect(response)
     soup = BeautifulSoup(response.text, 'lxml')
     books_cards = soup.select("table.d_book")
     for book_card in books_cards:
