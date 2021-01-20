@@ -115,12 +115,12 @@ def main():
                 book_id, target_books_dir, target_images_dir,
                 args.skip_txt, args.skip_img)
             downloaded_books.append(downloaded_book)
-            print(f'Сохранена книга: {BOOK_URL.format(book_id)}')
+            print(f'Downloaded book: {BOOK_URL.format(book_id)}')
         except ConnectionError as conn_err:
             print(conn_err, file=sys.stderr)
             time.sleep(5)
         except HTTPError as http_err:
-            print(http_err, file=sys.stderr)
+            print(f'{http_err}: id {book_id}', file=sys.stderr)
 
     result_filepath = args.json_path or os.path.join(args.dest_dir,
                                                      'downloaded_books.json')

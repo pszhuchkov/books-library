@@ -41,12 +41,12 @@ def download_books_on_page(
             downloaded_book = download_book(
                 book_id, books_folder, images_folder, skip_txt, skip_img)
             downloaded_books_on_page.append(downloaded_book)
-            print(f'Сохранена книга: {BOOK_URL.format(book_id)}')
+            print(f'Downloaded book: {BOOK_URL.format(book_id)}')
         except ConnectionError as conn_err:
             print(conn_err, file=sys.stderr)
             time.sleep(5)
         except HTTPError as http_err:
-            print(http_err, file=sys.stderr)
+            print(f'{http_err}: id {book_id}', file=sys.stderr)
     return downloaded_books_on_page
 
 
@@ -64,12 +64,12 @@ def main():
                                        target_images_dir, args.skip_txt,
                                        args.skip_img)
             )
-            print(f'Обработка страницы {page_number} завершена')
+            print(f'Processing of page {page_number} is finished')
         except ConnectionError as conn_err:
             print(conn_err, file=sys.stderr)
             time.sleep(5)
         except HTTPError as http_err:
-            print(http_err, file=sys.stderr)
+            print(f'{http_err}: page {page_number}', file=sys.stderr)
 
     result_filepath = args.json_path or os.path.join(args.dest_dir,
                                                      'downloaded_books.json')
