@@ -12,7 +12,6 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from requests.exceptions import HTTPError, ConnectionError
-from tqdm import tqdm
 from urllib.parse import urljoin, urlsplit, unquote
 
 
@@ -121,7 +120,7 @@ def main():
     Path(args.books_folder).mkdir(exist_ok=True)
     Path(args.images_folder).mkdir(exist_ok=True)
     downloaded_books = []
-    for book_id in tqdm(range(args.start_id, args.end_id + 1)):
+    for book_id in range(args.start_id, args.end_id + 1):
         try:
             downloaded_book = download_book(
                 book_id, args.books_folder, args.images_folder
