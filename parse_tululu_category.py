@@ -6,13 +6,13 @@ import time
 import requests
 import urllib3
 
-from pathlib import Path
 from bs4 import BeautifulSoup
 from requests.exceptions import HTTPError, ConnectionError
 from urllib.parse import urljoin
-from parse_tululu import download_book, check_for_redirect
 from constants import BOOK_URL
 from helpers import get_parsed_arguments
+from parse_tululu import download_book, check_for_redirect,\
+    create_books_and_images_dirs
 
 
 def get_amount_pages(url):
@@ -52,10 +52,7 @@ def download_books_on_page(
 
 def main():
     args = get_parsed_arguments()
-    target_books_dir = os.path.join(args.dest_dir, args.books_dirname)
-    target_images_dir = os.path.join(args.dest_dir, args.images_dirname)
-    Path(target_books_dir).mkdir(exist_ok=True)
-    Path(target_images_dir).mkdir(exist_ok=True)
+    target_books_dir, target_images_dir = create_books_and_images_dirs(args)
     downloaded_books = []
     start_page = args.start_page
     end_page = args.end_page or get_amount_pages(args.collection_url)

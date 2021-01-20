@@ -97,12 +97,17 @@ def download_book(
     return book_properties
 
 
-def main():
-    args = get_parsed_arguments()
+def create_books_and_images_dirs(args):
     target_books_dir = os.path.join(args.dest_dir, args.books_dirname)
     target_images_dir = os.path.join(args.dest_dir, args.images_dirname)
     Path(target_books_dir).mkdir(exist_ok=True)
     Path(target_images_dir).mkdir(exist_ok=True)
+    return target_books_dir, target_images_dir
+
+
+def main():
+    args = get_parsed_arguments()
+    target_books_dir, target_images_dir = create_books_and_images_dirs(args)
     downloaded_books = []
     for book_id in range(args.start_id, args.end_id + 1):
         try:
