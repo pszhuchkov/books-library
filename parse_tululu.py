@@ -132,6 +132,7 @@ def main():
             time.sleep(5)
         except HTTPError as http_err:
             print(http_err, file=sys.stderr)
+
     with open('downloaded_books.json', 'w', encoding='utf_8') as file:
         json.dump(downloaded_books, file, ensure_ascii=False, indent=4)
 
