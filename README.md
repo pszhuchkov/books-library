@@ -41,17 +41,17 @@ python parse_tululu.py 20 30
 
 Примеры запуска программы:
 ```console
-python parse_tululu.py --start_page 10 --end_page 20
+python parse_tululu_category.py --start_page 10 --end_page 20
 ```
 В данном примере будут загружены все *доступные* книги, находящийся на страницах с 
 идентификаторами с 1 по 5 включительно.  
 ```console
-python parse_tululu.py --end_page 7
+python parse_tululu_category.py --end_page 7
 ```
 В данном примере будут загружены все *доступные* книги, находящийся на страницах с 
 идентификаторами с 1 по 7 включительно.  
 ```console
-python parse_tululu.py --start_page 10
+python parse_tululu_category.py --start_page 10
 ```
 В данном примере будут загружены все *доступные* книги, находящийся на страницах с 
 идентификаторами с 10 по *последнюю* включительно.  
