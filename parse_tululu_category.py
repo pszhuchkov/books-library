@@ -15,7 +15,7 @@ from parse_tululu import download_book, check_for_redirect,\
     create_books_and_images_dirs
 
 
-def get_amount_pages(url):
+def get_pages_amount(url):
     response = requests.get(url, verify=False)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, 'lxml')
@@ -55,7 +55,7 @@ def main():
     target_books_dir, target_images_dir = create_books_and_images_dirs(args)
     downloaded_books = []
     start_page = args.start_page
-    end_page = args.end_page or get_amount_pages(args.collection_url)
+    end_page = args.end_page or get_pages_amount(args.collection_url)
     for page_number in range(start_page, end_page + 1):
         url = urljoin(args.collection_url, str(page_number))
         try:
