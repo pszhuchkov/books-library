@@ -56,14 +56,15 @@ def get_book_properties(book_id, url_template=BOOK_URL):
     response.raise_for_status()
     check_for_redirect(response)
     book_page = response.text
-    return parse_book_page(book_page)
+    return parse_book_page(book_page, book_url)
 
 
-def parse_book_page(html):
+def parse_book_page(html, book_url):
     soup = BeautifulSoup(html, 'lxml')
     title, author, *_ = soup.find('h1').text.split('::')
     title, author = title.strip(), author.strip()
     img_src = soup.select_one(".bookimage img")['src']
+    img_url = urljoin(book_url, img_src)
     raw_comments = soup.select('.texts')
     comments = [comment.find('span').text for comment in raw_comments]
     raw_genres = soup.select("span.d_book a")
@@ -71,7 +72,7 @@ def parse_book_page(html):
     return {
         'title': title,
         'author': author,
-        'img_src': img_src,
+        'img_url': img_url,
         'comments': comments,
         'genres': genres
     }
@@ -89,10 +90,10 @@ def download_book(book_id, books_dir, images_dir, skip_txt,
         book_properties['book_path'] = save_txt_file(response, filename,
                                                      books_dir)
     if not skip_img:
-        image_url = urljoin(url_template, book_properties['img_src'])
-        book_properties['img_src'] = download_image(image_url, images_dir)
+        img_url = book_properties.pop('img_url')
+        book_properties['img_src'] = download_image(img_url, images_dir)
     else:
-        del book_properties['img_src']
+        del book_properties['img_url']
     return book_properties
 
 
