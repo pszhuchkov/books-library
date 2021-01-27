@@ -19,9 +19,9 @@ def get_pages_amount(url):
     response = requests.get(url, verify=False)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, 'lxml')
-    page_numbers = soup.select('.npage')
-    if page_numbers:
-        last_page_number = int(page_numbers[-1].string)
+    last_page = soup.select('.npage:last-of-type')
+    if last_page:
+        last_page_number = int(last_page[0].string)
         return last_page_number
     return 1
 
