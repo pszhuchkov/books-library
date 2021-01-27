@@ -50,8 +50,8 @@ def check_for_redirect(response):
         raise HTTPError('Redirected')
 
 
-def get_book_properties(book_id, url=BOOK_URL):
-    book_url = url.format(book_id)
+def get_book_properties(book_id, url_template=BOOK_URL):
+    book_url = url_template.format(book_id)
     response = requests.get(book_url, verify=False)
     response.raise_for_status()
     check_for_redirect(response)
@@ -77,10 +77,9 @@ def parse_book_page(html):
     }
 
 
-def download_book(
-        book_id, books_dir, images_dir, skip_txt,
-        skip_img, url=DOWNLOAD_TXT_URL):
-    book_txt_url = url.format(book_id)
+def download_book(book_id, books_dir, images_dir, skip_txt,
+                  skip_img, url_template=DOWNLOAD_TXT_URL):
+    book_txt_url = url_template.format(book_id)
     response = requests.get(book_txt_url, verify=False)
     response.raise_for_status()
     check_for_redirect(response)
@@ -90,7 +89,7 @@ def download_book(
         book_properties['book_path'] = save_txt_file(response, filename,
                                                      books_dir)
     if not skip_img:
-        image_url = urljoin(url, book_properties['img_src'])
+        image_url = urljoin(url_template, book_properties['img_src'])
         book_properties['img_src'] = download_image(image_url, images_dir)
     else:
         del book_properties['img_src']
