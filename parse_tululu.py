@@ -7,7 +7,7 @@ import requests
 import urllib3
 
 from datetime import datetime
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from requests.exceptions import HTTPError, ConnectionError
@@ -17,10 +17,10 @@ from helpers import get_parsed_arguments
 
 
 def save_txt_file(response, filename, books_dir):
-    filepath = os.path.join(books_dir, f"{sanitize_filename(filename)}.txt")
+    filepath = PurePosixPath(books_dir, f"{sanitize_filename(filename)}.txt")
     with open(filepath, 'w', encoding='utf8') as file:
         file.write(response.text)
-    return filepath
+    return str(filepath)
 
 
 def download_image(url, images_dir):
@@ -33,10 +33,10 @@ def download_image(url, images_dir):
     new_filename = filename
     if filename != 'nopic':
         new_filename = f'{filename}_{timestamp_now}'
-    filepath = os.path.join(images_dir, f'{new_filename}{extension}')
+    filepath = PurePosixPath(images_dir, f'{new_filename}{extension}')
     with open(filepath, 'wb') as file:
         file.write(response.content)
-    return filepath
+    return str(filepath)
 
 
 def get_timestamp_now():
