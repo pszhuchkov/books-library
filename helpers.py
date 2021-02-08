@@ -16,7 +16,7 @@ def get_parsed_arguments():
                         help='название каталога с книгами')
     parser.add_argument('--images_dirname', type=str, default=IMAGES_DIRNAME,
                         help='название каталога с изображениями')
-    parser.add_argument('--dest_dir', type=str, default='.',
+    parser.add_argument('--dest_dir', type=str, default='',
                         help='каталог для сохраняемых файлов')
     parser.add_argument('--skip_img', action='store_true',
                         default=False, help='не сохранять изображения')
