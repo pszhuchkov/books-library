@@ -73,8 +73,9 @@ python parse_tululu_category.py --start_page 10
 python render_website.py
 ```
 По умолчанию на одной веб-странице размещаются 20 книг, разделенные на 2 столбца.
-Доступ к страницам сайта осуществляется по следующему адресу: `http://127.0.0.1:5500/pages/index{номер страницы}.html`
-
+Доступ к страницам сайта осуществляется по следующему адресу: `http://127.0.0.1:5500/pages/index{номер страницы}.html`  
+  
+[Демо-версия сайта](https://pszhuchkov.github.io/books-library/pages/index1.html)  
 
 
 ### Цель проекта
