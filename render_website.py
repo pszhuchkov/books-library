@@ -28,18 +28,13 @@ def on_reload(books_count_per_page=BOOKS_COUNT_PER_PAGE,
             page_file.write(rendered_page)
 
 
-def main():
+if __name__ == '__main__':
+    os.makedirs(HTML_PAGES_DIRNAME, exist_ok=True)
+
+    env = Environment(loader=FileSystemLoader('templates'),
+                      autoescape=select_autoescape(['html']))
     on_reload()
 
     server = Server()
     server.watch('templates/template.html', on_reload)
     server.serve(root='.')
-
-
-if __name__ == '__main__':
-    os.makedirs('pages', exist_ok=True)
-    env = Environment(
-        loader=FileSystemLoader('templates'),
-        autoescape=select_autoescape(['html'])
-    )
-    main()
