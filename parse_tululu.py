@@ -86,7 +86,7 @@ def download_book(book_id, books_dir, images_dir, skip_txt,
     check_for_redirect(response)
     book_properties = get_book_properties(book_id)
     if not skip_txt:
-        filename = f"{book_id}. {book_properties['title']}"
+        filename = f"{book_id}. {book_properties['title'][:100]}"
         book_properties['book_path'] = save_txt_file(response, filename,
                                                      books_dir)
     if not skip_img:
