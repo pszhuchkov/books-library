@@ -4,10 +4,7 @@ import os
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from livereload import Server
 from more_itertools import chunked
-
-
-BOOKS_COUNT_PER_PAGE = 20
-COLUMNS_COUNT = 2
+from constants import BOOKS_COUNT_PER_PAGE, COLUMNS_COUNT, HTML_PAGES_DIRNAME
 
 
 def on_reload(books_count_per_page=BOOKS_COUNT_PER_PAGE,
