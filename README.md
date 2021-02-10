@@ -77,7 +77,7 @@ python render_website.py
   
 [Демо-версия сайта](https://pszhuchkov.github.io/books-library/pages/index1.html)  
 
-
+![img.png](screenshots/demo.png)
 ### Цель проекта
 
 Код написан в образовательных целях на онлайн-курсе для веб-разработчиков [dvmn.org](https://dvmn.org/).
