@@ -4,6 +4,7 @@ import os
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from livereload import Server
 from more_itertools import chunked
+from pathlib import Path
 from constants import BOOKS_COUNT_PER_PAGE, COLUMNS_COUNT, HTML_PAGES_DIRNAME
 
 
@@ -28,8 +29,16 @@ def render_pages_from_template(books_count_per_page=BOOKS_COUNT_PER_PAGE,
             page_file.write(rendered_page)
 
 
+def remove_files_from_directory(directory=HTML_PAGES_DIRNAME,
+                                extension='html'):
+    filepaths = Path(directory).glob(f'*.{extension}')
+    for filepath in filepaths:
+        Path(filepath).unlink(True)
+
+
 if __name__ == '__main__':
     os.makedirs(HTML_PAGES_DIRNAME, exist_ok=True)
+    remove_files_from_directory()
 
     env = Environment(loader=FileSystemLoader('templates'),
                       autoescape=select_autoescape(['html']))
