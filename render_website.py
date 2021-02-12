@@ -7,8 +7,8 @@ from more_itertools import chunked
 from constants import BOOKS_COUNT_PER_PAGE, COLUMNS_COUNT, HTML_PAGES_DIRNAME
 
 
-def on_reload(books_count_per_page=BOOKS_COUNT_PER_PAGE,
-              columns_count=COLUMNS_COUNT):
+def render_pages_from_template(books_count_per_page=BOOKS_COUNT_PER_PAGE,
+                               columns_count=COLUMNS_COUNT):
     template = env.get_template('template.html')
 
     with open('downloaded_books.json', encoding='utf_8') as file_with_books:
@@ -33,8 +33,8 @@ if __name__ == '__main__':
 
     env = Environment(loader=FileSystemLoader('templates'),
                       autoescape=select_autoescape(['html']))
-    on_reload()
+    render_pages_from_template()
 
     server = Server()
-    server.watch('templates/template.html', on_reload)
+    server.watch('templates/template.html', render_pages_from_template)
     server.serve(root='.')
