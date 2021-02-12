@@ -3,7 +3,6 @@ import os
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from livereload import Server
-from math import ceil
 from more_itertools import chunked
 from constants import BOOKS_COUNT_PER_PAGE, COLUMNS_COUNT, HTML_PAGES_DIRNAME
 
@@ -16,7 +15,7 @@ def on_reload(books_count_per_page=BOOKS_COUNT_PER_PAGE,
         books = json.load(file_with_books)
 
     books_divided_into_pages = list(chunked(books, books_count_per_page))
-    pages_count = ceil(len(books) / books_count_per_page)
+    pages_count = len(books_divided_into_pages)
 
     for page_num, books_for_one_page in enumerate(books_divided_into_pages, 1):
         books_divided_into_rows = chunked(books_for_one_page, columns_count)
