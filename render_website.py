@@ -61,7 +61,9 @@ if __name__ == '__main__':
 
     render_pages_from_template()
 
+    template_filepath = os.path.join(TEMPLATE_DIRNAME, TEMPLATE_FILENAME)
+
     server = Server()
-    server.watch('templates/template.html', render_pages_from_template)
+    server.watch(template_filepath, render_pages_from_template)
     server.watch(result_filepath, render_pages_from_template)
     server.serve(root='.')
