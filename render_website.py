@@ -9,11 +9,15 @@ from pathlib import Path
 from constants import BOOKS_COUNT_PER_PAGE, COLUMNS_COUNT, HTML_PAGES_DIRNAME
 
 
-def render_pages_from_template(books_count_per_page=BOOKS_COUNT_PER_PAGE,
-                               columns_count=COLUMNS_COUNT):
-    template = env.get_template('template.html')
+def render_pages_from_template(file_with_results,
+                               template_filename,
+                               books_count_per_page=BOOKS_COUNT_PER_PAGE,
+                               columns_count=COLUMNS_COUNT,
+                               target_directory=HTML_PAGES_DIRNAME):
 
-    with open('downloaded_books.json', encoding='utf_8') as file_with_books:
+    template = env.get_template(template_filename)
+
+    with open(file_with_results, encoding='utf_8') as file_with_books:
         books = json.load(file_with_books)
 
     books_divided_into_pages = list(chunked(books, books_count_per_page))
@@ -24,7 +28,7 @@ def render_pages_from_template(books_count_per_page=BOOKS_COUNT_PER_PAGE,
         rendered_page = template.render(books=books_divided_into_rows,
                                         pages_count=pages_count,
                                         current_page=page_num)
-        filepath = os.path.join('pages', f'index{page_num}.html')
+        filepath = os.path.join(target_directory, f'index{page_num}.html')
 
         with open(filepath, 'w', encoding="utf8") as page_file:
             page_file.write(rendered_page)
