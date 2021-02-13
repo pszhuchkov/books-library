@@ -7,3 +7,5 @@ COLLECTION_URL = 'https://tululu.org/l55/'  # Fantastic
 BOOKS_COUNT_PER_PAGE = 20
 COLUMNS_COUNT = 2
 HTML_PAGES_DIRNAME = 'pages'
+TEMPLATE_DIRNAME = 'templates'
+TEMPLATE_FILENAME = 'template.html'
