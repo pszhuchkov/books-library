@@ -3,10 +3,12 @@ import glob
 import os
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from functools import partial
 from livereload import Server
 from more_itertools import chunked
-from pathlib import Path
-from constants import BOOKS_COUNT_PER_PAGE, COLUMNS_COUNT, HTML_PAGES_DIRNAME
+from constants import BOOKS_COUNT_PER_PAGE, COLUMNS_COUNT,\
+    HTML_PAGES_DIRNAME, TEMPLATE_DIRNAME, TEMPLATE_FILENAME
+from helpers import get_parsed_arguments
 
 
 def render_pages_from_template(file_with_results,
@@ -46,10 +48,17 @@ def remove_redundant_files(actual_files, directory, extension='html'):
 
 if __name__ == '__main__':
     os.makedirs(HTML_PAGES_DIRNAME, exist_ok=True)
-    remove_files_from_directory()
 
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIRNAME),
                       autoescape=select_autoescape(['html']))
+
+    args = get_parsed_arguments()
+    result_filepath = args.json_path or os.path.join(args.dest_dir,
+                                                     'downloaded_books.json')
+
+    render_pages_from_template = partial(render_pages_from_template,
+                                         result_filepath, TEMPLATE_FILENAME)
+
     render_pages_from_template()
 
     server = Server()
